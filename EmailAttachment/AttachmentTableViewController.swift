@@ -1,27 +1,7 @@
 import UIKit
-import MessageUI
 
-class AttachmentTableViewController: UITableViewController, MFMailComposeViewControllerDelegate {
+class AttachmentTableViewController: UITableViewController {
 
-    enum MIMEType: String {
-        case html = "text/html"
-        case jpg = "image/jpeg"
-        case ppt = "application/vnd.ms-powerpoint"
-        case png = "image/png"
-        case doc = "application/msword"
-        
-        init?(type: String) {
-            switch type.lowercaseString {
-                case "html": self = .html
-                case "jpg": self = .jpg
-                case "ppt": self = .ppt
-                case "png": self = .png
-                case "doc": self = .doc
-            default: return nil
-            }
-        }
-    }
-    
     let filenames = ["camera-photo-tips.html", "foggy.jpg", "Hello World.ppt", "no more complaint.png", "Just Dev.doc"]
     
     override func viewDidLoad() {
@@ -62,51 +42,6 @@ class AttachmentTableViewController: UITableViewController, MFMailComposeViewCon
         return cell
     }
     
-    func showEmail(attachmentFile: String) {
-        guard MFMailComposeViewController.canSendMail() else {
-            return
-        }
-        
-        let emailTitle = "Great Photo and Doc"
-        let messageBody = "Hey, check this out!"
-        let toRecipients = ["musonlymail@gmail.com"]
-        
-        let mailComposer = MFMailComposeViewController()
-        mailComposer.mailComposeDelegate = self
-        mailComposer.setSubject(emailTitle)
-        mailComposer.setMessageBody(messageBody, isHTML: false)
-        mailComposer.setToRecipients(toRecipients)
-        
-        let fileparts = attachmentFile.componentsSeparatedByString(".")
-        let filename = fileparts[0]
-        let fileExtension = fileparts[1]
-        
-        guard let filePath = NSBundle.mainBundle().pathForResource(filename, ofType: fileExtension) else {
-            return
-        }
-        
-        if let fileData = NSData(contentsOfFile: filePath), mimeType = MIMEType(type: fileExtension) {
-            mailComposer.addAttachmentData(fileData, mimeType: mimeType.rawValue, fileName: filename)
-            
-            presentViewController(mailComposer, animated: true, completion: nil)
-        }
-    }
-    
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        switch result.rawValue {
-        case MFMailComposeResultCancelled.rawValue: print("Cancel")
-        case MFMailComposeResultSaved.rawValue: print("Saved")
-        case MFMailComposeResultSent.rawValue: print("Sent")
-        case MFMailComposeResultFailed.rawValue: print("Failed")
-        default: break
-        }
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let selectedFile = self.filenames[indexPath.row]
-        showEmail(selectedFile)
-    }
 
     /*
     // Override to support conditional editing of the table view.
