@@ -1,7 +1,6 @@
 import UIKit
-import MessageUI
 
-class AttachmentTableViewController: UITableViewController, MFMessageComposeViewControllerDelegate {
+class AttachmentTableViewController: UITableViewController {
 
     let filenames = ["camera-photo-tips.html", "foggy.jpg", "Hello World.ppt", "no more complaint.png", "Just Dev.doc"]
     
@@ -39,60 +38,54 @@ class AttachmentTableViewController: UITableViewController, MFMessageComposeView
         // Configure the cell...
         cell.textLabel?.text = filenames[indexPath.row]
         cell.imageView?.image = UIImage(named: "icon\(indexPath.row).png");
-        cell.imageView?.frame.height
+
         return cell
     }
     
-    func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
-        switch result.rawValue {
-        case MessageComposeResultCancelled.rawValue: print("Cancel")
-        case MessageComposeResultFailed.rawValue:
-            let alertMessage = UIAlertController(title: "Failure", message: "Failed to send the message", preferredStyle: .Alert)
-            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-            presentViewController(alertMessage, animated: true, completion: nil)
-        case MessageComposeResultSent.rawValue: print("sent")
-        default: break
-        }
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let selectedFile = filenames[indexPath.row]
-        sendSMS(selectedFile)
-    }
 
-    func sendSMS(attachment: String) {
-        guard MFMessageComposeViewController.canSendText() else {
-            let alertMessage = UIAlertController(title: "SMS Unavailable", message: "Your device is not capable of sending SMS", preferredStyle: .Alert)
-            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-            presentViewController(alertMessage, animated: true, completion: nil)
-            return
-        }
-        
-        let messageController = MFMessageComposeViewController()
-        messageController.messageComposeDelegate = self
-        
-        let fileparts = attachment.componentsSeparatedByString(".")
-        let filename = fileparts[0]
-        let fileExtension = fileparts[1]
-        let filePath = NSBundle.mainBundle().pathForResource(filename, ofType: fileExtension)
-        let fileURL = NSURL.fileURLWithPath(filePath!)
-        
-        messageController.addAttachmentURL(fileURL, withAlternateFilename: nil)
-        
-        
-        messageController.recipients = ["12345678", "987654321"]
-        messageController.body = "Just sent the \(attachment) to your email. Pls check it!"
-        
-        presentViewController(messageController, animated: true, completion: nil)
+    /*
+    // Override to support conditional editing of the table view.
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        // Return NO if you do not want the specified item to be editable.
+        return true
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    */
+
+    /*
+    // Override to support editing the table view.
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            // Delete the row from the data source
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        } else if editingStyle == .Insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        }    
+    }
+    */
+
+    /*
+    // Override to support rearranging the table view.
+    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
+
+    }
+    */
+
+    /*
+    // Override to support conditional rearranging of the table view.
+    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        // Return NO if you do not want the item to be re-orderable.
+        return true
+    }
+    */
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // Get the new view controller using [segue destinationViewController].
+        // Pass the selected object to the new view controller.
+    }
+    */
+
 }
