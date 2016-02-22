@@ -42,7 +42,24 @@ class AttachmentTableViewController: UITableViewController {
         return cell
     }
     
-
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if let fileURL = fileToURL(filenames[indexPath.row]) {
+            let activityContoller = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
+            presentViewController(activityContoller, animated: true, completion: nil)
+        }
+    }
+    
+    func fileToURL(file: String) -> NSURL? {
+        let fileComponents = file.componentsSeparatedByString(".")
+        
+        if let filePath = NSBundle.mainBundle().pathForResource(fileComponents[0], ofType: fileComponents[1]) {
+            return NSURL(fileURLWithPath: filePath)
+        }
+        
+        return nil
+    }
+    
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
